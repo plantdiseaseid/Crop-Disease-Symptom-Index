@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Field Index — Crop Disease Diagnosis</title>
+<title>Field Guide — Crop Disease Identification Index</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -351,6 +351,7 @@
   .type-phytoplasma{background:#7C9A4E;}
   .type-oomycete{background:#3B6B5E;}
   .type-algal{background:#5FA777;}
+  .type-nematode{background:#8A6D4A;}
   .card-body p.desc{
     font-size:13.5px;
     line-height:1.55;
@@ -516,12 +517,11 @@
 
   <header>
     <div>
-      <p class="eyebrow"><svg class="sprig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22V10"/><path d="M12 10C12 10 5 9 5 3C11 3 12 10 12 10Z"/><path d="M12 15C12 15 19 14 19 8C13 8 12 15 12 15Z"/></svg>Extension Field Guide · No. 07</p>
-      <h1>Crop Disease <em>Symptom Index</em></h1>
+      <p class="eyebrow"><svg class="sprig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22V10"/><path d="M12 10C12 10 5 9 5 3C11 3 12 10 12 10Z"/><path d="M12 15C12 15 19 14 19 8C13 8 12 15 12 15Z"/></svg>Field Guide</p>
+      <h1>Crop Disease <em>Identification Index</em></h1>
     </div>
-    <div class="plate-no">SPECIMEN LOOKUP<br>TOOL — REV. 2026</div>
   </header>
-  <p class="sub">Check what you observe on the plant — location, appearance, color, and conditions. The index cross-references your marks against 38 crop diseases spanning fungi, bacteria, viruses, phytoplasmas, oomycetes, and algae — including diseases common to Sri Lankan tea, rubber, coconut, rice, and spice crops — and ranks the closest matches. Each result is labeled by pathogen type. Not a substitute for lab confirmation on high-value crops.</p>
+  <p class="sub">Check what you observe on the plant — location, appearance, color, and conditions. The index cross-references your marks against 42 crop diseases spanning fungi, bacteria, viruses, phytoplasmas, oomycetes, algae, and nematodes — including diseases common to Sri Lankan tea, rubber, coconut, rice, and spice crops — and ranks the closest matches. Each result is labeled by pathogen type. Not a substitute for lab confirmation on high-value crops.</p>
 
   <div class="layout">
     <div class="panel">
@@ -684,11 +684,6 @@ const DISEASES = [
     desc:'Grayish-white galls swell on ears, stems, or tassels and rupture to release a mass of powdery black spores as they mature.',
     treat:'Remove and destroy galls before rupture, avoid mechanical wounding of plants, rotate crops, use resistant hybrids.' },
 
-  { id:'apple_scab', type:'fungal', img:'photos/apple_scab.jpg', common:'Apple Scab', latin:'Venturia inaequalis',
-    tags:['leaf_any','fruit','scab','spots_irregular','brown','black','wet','cool'],
-    desc:'Olive-green to black scabby lesions form on leaves and fruit, with fruit developing corky, rough patches that can crack as they enlarge.',
-    treat:'Rake and destroy fallen leaves in autumn, prune for airflow, apply fungicide from bud break through wet spring weather, plant resistant cultivars.' },
-
   { id:'citrus_canker', type:'bacterial', img:'photos/citrus_canker.jpg', common:'Citrus Canker', latin:'Xanthomonas citri subsp. citri',
     tags:['leaf_any','stem','fruit','canker','spots_circular','brown','yellow','wet','humid'],
     desc:'Raised, corky lesions with water-soaked, yellow-haloed margins erupt on leaves, twigs, and fruit of citrus trees, often coalescing into cracked canker-like patches.',
@@ -708,11 +703,6 @@ const DISEASES = [
     tags:['stem','canker','rot_dry','brown','black','wet'],
     desc:'Sunken, discolored lesions girdle the stem at the site of infection, often at a wound or node, eventually cutting off water flow and causing dieback above the canker.',
     treat:'Prune out and destroy cankered stems well below the lesion, disinfect pruning tools, avoid stem wounding, apply protectant fungicide at pruning cuts in high-risk periods.' },
-
-  { id:'mummification', type:'fungal', img:'photos/mummification.jpg', common:'Fruit Mummification', latin:'Monilinia spp.',
-    tags:['fruit','rot_dry','brown','gray','fuzzy_mold','humid','wet'],
-    desc:'Infected fruit shrivels, hardens, and turns leathery brown-gray as it dries on the tree or vine, often remaining attached as a "mummy" that carries the pathogen into the next season.',
-    treat:'Remove and destroy mummified fruit from the plant and ground, prune for airflow, apply fungicide during bloom and fruit development, sanitize the orchard floor each season.' },
 
   { id:'plumeria_rust', type:'fungal', img:'photos/plumeria_rust.jpg', common:'Plumeria Rust', latin:'Coleosporium plumeriae',
     tags:['leaf_any','pustules','orange','yellow','humid','warm'],
@@ -803,6 +793,36 @@ const DISEASES = [
     tags:['leaf_any','spots_circular','brown','black','wet','humid'],
     desc:'Small brown spots with darker margins appear scattered across cinnamon leaves, enlarging and merging in prolonged wet weather to cause premature leaf drop and weakened shoots.',
     treat:'Prune for airflow and remove fallen infected leaves, avoid overhead irrigation, apply copper-based fungicide during wet periods, maintain balanced fertilization.' },
+
+  { id:'root_knot_nematode', type:'nematode', img:'photos/root_knot_nematode.jpg', common:'Root-Knot Nematode Disease', latin:'Meloidogyne spp.',
+    tags:['root','galls','whole','yellow','wilting','warm'],
+    desc:'Roots develop numerous small knotty galls that disrupt water and nutrient uptake, causing stunting, yellowing, and wilting in hot weather even when soil moisture is adequate.',
+    treat:'Rotate with non-host crops such as marigold or grasses, solarize soil before planting, use resistant varieties where available, avoid moving infested soil or seedlings between plots.' },
+
+  { id:'banana_toppling_nematode', type:'nematode', img:'photos/banana_toppling_nematode.jpg', common:'Burrowing Nematode / Banana Toppling Disease', latin:'Radopholus similis',
+    tags:['root','rot_soft','black','whole','wilting'],
+    desc:'Roots rot and turn reddish-black internally, weakening the plant\u2019s anchorage until top-heavy, fruiting banana plants topple over, often without warning.',
+    treat:'Use clean, nematode-free planting material (tissue-cultured plants where possible), rotate out of banana for a season, apply nematicide or organic soil amendments, remove and destroy fallen mats.' },
+
+  { id:'pepper_nematode_decline', type:'nematode', img:'photos/pepper_nematode_decline.jpg', common:'Burrowing Nematode Decline (Black Pepper)', latin:'Radopholus similis',
+    tags:['root','whole','yellow','wilting'],
+    desc:'Pepper vines decline slowly over one or more seasons, with yellowing leaves, thinning foliage, and reduced vigor as damaged roots lose their ability to support the plant.',
+    treat:'Use certified nematode-free planting material, improve soil organic matter, apply nematicide to the root zone where infestation is confirmed, avoid replanting immediately in heavily infested beds.' },
+
+  { id:'citrus_slow_decline', type:'nematode', img:'photos/citrus_slow_decline.jpg', common:'Citrus Slow Decline', latin:'Tylenchulus semipenetrans',
+    tags:['whole','leaf_any','yellow','necrosis'],
+    desc:'Citrus trees decline gradually with smaller leaves, twig dieback, and reduced fruit size over several years — often mistaken for nutrient deficiency since there is no single dramatic symptom.',
+    treat:'Test soil for nematode presence before planting new citrus, use tolerant rootstocks, maintain good irrigation and nutrition to reduce stress, apply nematicide where populations are high.' },
+
+  { id:'rice_white_tip', type:'nematode', img:'photos/rice_white_tip.jpg', common:'Rice White Tip Nematode', latin:'Aphelenchoides besseyi',
+    tags:['leaf_new','tip_necrosis','white','leaf_distortion'],
+    desc:'The tips of young leaves, especially the flag leaf, turn white or pale and twist, and affected panicles are often sterile or poorly filled — the nematode spreads mainly through infected seed.',
+    treat:'Use certified, nematode-free seed, hot-water treat seed before sowing where infestation is suspected, rotate with non-host crops, avoid saving seed from affected fields.' },
+
+  { id:'potato_cyst_nematode', type:'nematode', img:'photos/potato_cyst_nematode.jpg', common:'Potato Cyst Nematode', latin:'Globodera spp.',
+    tags:['root','whole','yellow','wilting','cool'],
+    desc:'Plants grow poorly in patches across the field, with yellowing and wilting foliage in circular zones; tiny cysts are visible on the roots when dug up, common in Sri Lanka\u2019s cooler upcountry potato land.',
+    treat:'Rotate with non-host crops for several years, use certified cyst-free seed potatoes, avoid moving infested soil between fields on tools or footwear, use resistant varieties where available.' },
 ];
 
 const ICONS = {
@@ -873,7 +893,7 @@ function render(){
     return id;
   };
 
-  const TYPE_LABEL = { fungal:'Fungal', bacterial:'Bacterial', viral:'Viral', phytoplasma:'Phytoplasma', oomycete:'Oomycete', algal:'Algal' };
+  const TYPE_LABEL = { fungal:'Fungal', bacterial:'Bacterial', viral:'Viral', phytoplasma:'Phytoplasma', oomycete:'Oomycete', algal:'Algal', nematode:'Nematode' };
 
   resultsEl.innerHTML = `<div class="cards">` + ranked.map((d,i) => `
     <div class="card ${i===0 ? 'best' : ''}">

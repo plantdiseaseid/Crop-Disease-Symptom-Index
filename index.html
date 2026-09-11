@@ -6,6 +6,7 @@
 <title>Field Guide — Crop Disease Identification Index</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Nunito:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
   :root{
     --paper: #FFFFFF;
@@ -681,7 +682,7 @@
     <div class="panel">
       <details class="filter-details" open>
         <summary class="filter-summary">Symptom Checklist <span class="chev">&#8250;</span></summary>
-        <div class="panel-inner" id="form"></div>
+        <div class="panel-inner" id="form">Loading symptom checklist\u2026</div>
       </details>
     </div>
 
@@ -767,7 +768,7 @@ const GROUPS = [
 ];
 
 // ---------- DISEASE DATABASE ----------
-const DISEASES = [
+const FALLBACK_DISEASES = [
   { id:'powdery_mildew', type:'fungal', img:'photos/powdery_mildew.jpg', common:'Powdery Mildew', latin:'Erysiphales spp.',
     tags:['leaf_any','leaf_new','powdery','white','poor_air','warm'],
     desc:'A white to gray powdery coating spreads across leaf surfaces and stems, often starting on upper leaf faces, eventually stunting growth and distorting new shoots.',
@@ -979,6 +980,48 @@ const DISEASES = [
     treat:'Rotate with non-host crops for several years, use certified cyst-free seed potatoes, avoid moving infested soil between fields on tools or footwear, use resistant varieties where available.' },
 ];
 
+// ---------- LIVE DATA LOADING ----------
+// Disease data loads at runtime from an external CSV file so non-technical
+// people can fix facts by editing a spreadsheet -- no code changes needed.
+// Point DATA_SOURCE_URL at either:
+//   (a) a CSV file sitting next to this HTML file in the same repo, or
+//   (b) a Google Sheet published as CSV (File > Share > Publish to web > CSV)
+// If loading fails for any reason, the page falls back to the built-in
+// FALLBACK_DISEASES data above so it still works.
+let DISEASES = [];
+const DATA_SOURCE_URL = 'diseases.csv';
+
+async function loadDiseaseData(){
+  try {
+    const res = await fetch(DATA_SOURCE_URL, { cache: 'no-store' });
+    if(!res.ok) throw new Error('Fetch failed: ' + res.status);
+    const csvText = await res.text();
+    const parsed = Papa.parse(csvText, { header:true, skipEmptyLines:true });
+    if(parsed.errors && parsed.errors.length){
+      console.warn('CSV parse warnings:', parsed.errors);
+    }
+    const rows = parsed.data
+      .filter(r => r.id && r.common)
+      .map(r => ({
+        id: r.id.trim(),
+        type: (r.type || 'fungal').trim(),
+        img: `photos/${r.id.trim()}.jpg`,
+        common: r.common.trim(),
+        latin: (r.latin || '').trim(),
+        tags: (r.tags || '').split(';').map(t => t.trim()).filter(Boolean),
+        desc: (r.desc || '').trim(),
+        treat: (r.treat || '').trim(),
+      }));
+    if(rows.length === 0) throw new Error('CSV loaded but had no usable rows');
+    DISEASES = rows;
+    console.log(`Loaded ${DISEASES.length} diseases from ${DATA_SOURCE_URL}`);
+  } catch(err){
+    console.warn('Could not load external disease data, using built-in fallback.', err);
+    DISEASES = FALLBACK_DISEASES;
+  }
+}
+
+
 const ICONS = {
   leaf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20C4 20 4 10 12 6C20 10 20 20 4 20Z"/><path d="M4 20C8 14 12 10 18 7"/></svg>',
 };
@@ -1088,8 +1131,10 @@ function render(){
   `).join('') + `</div>`;
 }
 
-buildForm();
-render();
+loadDiseaseData().then(() => {
+  buildForm();
+  render();
+});
 
 // ---------- MULTI-PHOTO SUPPORT ----------
 // Each disease can have up to MAX_PHOTOS numbered files:
